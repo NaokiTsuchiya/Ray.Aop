@@ -82,13 +82,16 @@ class AopCodeTest extends TestCase
         $this->assertStringContainsString('public function method18(): string|int', $code);
         $this->assertStringContainsString('public function method19(): string|int|null', $code);
         $this->assertStringContainsString('public function method20(): \DateTime|string|null', $code);
+
+        // PHPDoc is not generated
+        $phpDoc = '    /**
+     * PHPDoc
+     */';
         $this->assertStringContainsString(
             implode(
                 PHP_EOL,
                 [
-                    '    /**',
-                    '     * PHPDoc',
-                    '     */',
+                    $phpDoc,
                     '     #[\\Ray\\Aop\\Annotation\\FakeMarker4(array(0=>1,1=>2,), 3)]',
                     '      public function method21()',
                 ]
