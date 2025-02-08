@@ -11,10 +11,12 @@ use stdClass;
 
 use function class_exists;
 use function file_put_contents;
+use function implode;
 use function sys_get_temp_dir;
 use function tempnam;
 use function unlink;
 
+use const PHP_EOL;
 use const PHP_VERSION_ID;
 
 class AopCodeTest extends TestCase
@@ -80,17 +82,49 @@ class AopCodeTest extends TestCase
         $this->assertStringContainsString('public function method18(): string|int', $code);
         $this->assertStringContainsString('public function method19(): string|int|null', $code);
         $this->assertStringContainsString('public function method20(): \DateTime|string|null', $code);
-        $this->assertStringContainsString('    /**
-     * PHPDoc
-     */
-     #[\\Ray\\Aop\\Annotation\\FakeMarker4(array(0=>1,1=>2,), 3)]
-      public function method21()', $code);
-        $this->assertStringContainsString('#[\\Ray\\Aop\\Annotation\\FakeMarkerName(a: 1, b: \'string\', c: true)]
-      public function method22()', $code);
-        $this->assertStringContainsString('#[\\Ray\\Aop\\Annotation\\FakeMarker5(\\Ray\\Aop\\FakePhp81Enum::Apple)]
-      public function method23()', $code);
-        $this->assertStringContainsString('#[\\Ray\\Aop\\Annotation\\FakeMarker6(fruit1: \\Ray\\Aop\\FakePhp81Enum::Apple, fruit2: \\Ray\\Aop\\FakePhp81Enum::Orange)]
-      public function method24()', $code);
+        $this->assertStringContainsString(
+            implode(
+                PHP_EOL,
+                [
+                    '    /**',
+                    '     * PHPDoc',
+                    '     */',
+                    '     #[\\Ray\\Aop\\Annotation\\FakeMarker4(array(0=>1,1=>2,), 3)]',
+                    '      public function method21()',
+                ]
+            ),
+            $code
+        );
+        $this->assertStringContainsString(
+            implode(
+                PHP_EOL,
+                [
+                    '     #[\\Ray\\Aop\\Annotation\\FakeMarkerName(a: 1, b: \'string\', c: true)]',
+                    '      public function method22()',
+                ]
+            ),
+            $code
+        );
+        $this->assertStringContainsString(
+            implode(
+                PHP_EOL,
+                [
+                    '     #[\\Ray\\Aop\\Annotation\\FakeMarker5(\\Ray\\Aop\\FakePhp81Enum::Apple)]',
+                    '      public function method23()',
+                ]
+            ),
+            $code
+        );
+        $this->assertStringContainsString(
+            implode(
+                PHP_EOL,
+                [
+                    '     #[\\Ray\\Aop\\Annotation\\FakeMarker6(fruit1: \\Ray\\Aop\\FakePhp81Enum::Apple, fruit2: \\Ray\\Aop\\FakePhp81Enum::Orange)]',
+                    '      public function method24()',
+                ]
+            ),
+            $code
+        );
         $this->assertStringContainsString("public function method25(#[\Ray\Aop\Attribute\FakeAttr1()] \$a, #[\Ray\Aop\Attribute\FakeAttr1()] #[\Ray\Aop\Attribute\FakeAttr2(name: 'famicon', age: 40)] \$b): void", $code);
     }
 
